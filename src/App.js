@@ -9,6 +9,11 @@ import Dashboard from './pages/admin/dashboard/Dashboard'
 import Main from './pages/main/Main'
 import UpdateProduct from './pages/admin/pages/UpdateProduct'
 import AddProduct from './pages/admin/pages/AddProduct'
+import Login from './pages/authentication/Login'
+import Signup from './pages/authentication/Signup'
+
+
+
 
 
 const routes = createBrowserRouter(
@@ -52,6 +57,14 @@ const routes = createBrowserRouter(
         {
           path:"admin/updateproduct",
           element:<UpdateProduct/>
+        },
+        {
+          path:'login',
+          element:<Login/>
+        },
+        {
+          path:'signup',
+          element:<Signup/>
         }
       ]
     }

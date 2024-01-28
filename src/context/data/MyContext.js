@@ -1,11 +1,19 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const Context = createContext();
 
 const MyContext = (props) => {
   const [product, setProduct] = useState([]);
   const [count, setCount] = useState([]);
+  const [error, setError] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [user, setUser] = useState(null);
+
+
 
   // add data to cart
   const addToCart = (cartId) => {
@@ -66,8 +74,28 @@ const MyContext = (props) => {
       });
   }, []);
 
+
+
+  const notify = () => toast(`${msg}`);
+
+
+
+  const loginUser = (user) => {
+    setUser(user);
+    localStorage.setItem('quiz',JSON.stringify(user))
+  };
+
+
+  // get Data from localstorage
+  useEffect(
+    ()=>{
+      let lsData = localStorage.getItem('quiz');
+      setUser(JSON.parse(lsData))
+    },[]
+  )
+
   return (
-    <Context.Provider value={{ product, count, addToCart, removeFromCart }}>
+    <Context.Provider value={{ product, count, addToCart, removeFromCart, loginUser, setMsg, setError, notify,user}}>
       {props.children}
     </Context.Provider>
   );
