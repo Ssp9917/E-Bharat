@@ -10,7 +10,7 @@ const Collection = () => {
             <h1 className='w-[350px] border-b-pink-500 border-b-4 text-center pb-2'>Our Latest Collection</h1>
         </div>
         <div className="flex gap-5 justify-center flex-wrap">
-        {product.map((d, i) => {
+        {/* {product.map((d, i) => {
           return (
             <div className="w-64 bg-white shadow-md rounded-xl mt-4 duration-500 hover:scale-105 hover:shadow-xl">
               
@@ -114,7 +114,7 @@ const Collection = () => {
             
             </div>
           );
-        })}
+        })} */}
       </div>
 
     </div>

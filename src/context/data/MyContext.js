@@ -1,8 +1,10 @@
 import axios from "axios";
+import { Timestamp, addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import {ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fireDb } from "../../firebase/firebaseConfig";
 
 
 const Context = createContext();
@@ -10,7 +12,7 @@ const Context = createContext();
 const MyContext = (props) => {
 
 
-  const [product, setProduct] = useState([]);
+  // const [product, setProduct] = useState([]);
   const [count, setCount] = useState([]);
   const [error, setError] = useState(false);
   const [user, setUser] = useState(null);
@@ -65,16 +67,16 @@ const MyContext = (props) => {
 
 
   // get data from api
-  useEffect(() => {
-    axios
-      .get("https://fakestoreapi.com/products")
-      .then((success) => {
-        setProduct(success.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("https://fakestoreapi.com/products")
+  //     .then((success) => {
+  //       setProduct(success.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
 
   // react toastify
@@ -105,8 +107,95 @@ const MyContext = (props) => {
     localStorage.removeItem('ebharat')
   }
 
+
+  // Add Data In FireStore Databse
+
+  const [firestoreProducts,setFirestoreProducts] = useState(
+    {
+      name:null,
+      price:null,
+      imageUrl:null,
+      category:null,
+      description:null,
+      time:Timestamp.now(),
+      date:new Date().toLocaleString(
+        "en-US",
+        {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }
+      )
+    }
+  )
+
+
+    // ********************** Add Product Section  **********************
+
+    const addProductInFireStore = async () =>{
+
+      console.log(firestoreProducts)
+
+      if(firestoreProducts.name != null && firestoreProducts.price != null && firestoreProducts.imageUrl != null && firestoreProducts.category != null && firestoreProducts.description != null  ){
+
+        // create refrence
+        const ProductRef = collection(fireDb,'products')
+
+        try {
+          await addDoc(ProductRef,firestoreProducts)
+        } catch (error) {
+          console.log(error)
+        }
+
+      }else{
+        console.log("All Fields Are Required")
+      }
+    } 
+
+
+     // ********************** Get Product Section  **********************
+
+     const [Products,setProducts] = useState([])
+
+     const getProductFromFireStore = async () => {
+        try {
+
+          // create query
+          const q = query(collection(fireDb,'firestoreProducts'),
+          orderBy('time')
+          );
+
+          const data = onSnapshot(q, (QuerySnapshot)=>{
+            // create empty array
+            let getProducts = [];
+
+            QuerySnapshot.forEach((doc)=>{
+              getProducts.push({...doc.data(),id:doc.id()})
+            })
+
+            setProducts(getProducts);
+          })
+
+          return () => data
+          
+        } catch (error) {
+          console.log(error)
+        }
+     }
+
+
+
+    //  ********************** Get Product First Rendring  **********************
+
+     useEffect(
+      ()=>{
+        getProductFromFireStore()
+      },[]
+     )
+
+
   return (
-    <Context.Provider value={{ product, count, addToCart, removeFromCart, loginUser, setError, notify,logout,user}}>
+    <Context.Provider value={{ count, addToCart, removeFromCart, loginUser, setError, notify,logout,user, firestoreProducts,setFirestoreProducts,addProductInFireStore}}>
     
      
       {props.children}
