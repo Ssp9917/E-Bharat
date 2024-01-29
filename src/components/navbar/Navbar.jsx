@@ -3,8 +3,9 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../../context/data/MyContext";
 
+
 const Navbar = () => {
-  const {count} = useContext(Context)
+  const {count,user,logout} = useContext(Context)
   return (
     <>
       <div className="bg-pink-500 text-white text-center pt-1 pb-1 font-medium">
@@ -34,14 +35,30 @@ const Navbar = () => {
                   Order
                 </Link>
               </li>
-              <li>
+              {
+                user?.email == 'sonusharma30.09.2004@gmail.com'?
+                <li>
                 <Link to='/admin/dashboard' className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
                   Admin
                 </Link>
-              </li>
-              <li>
+              </li>:''
+              }
+              
+
+              {
+                user == null
+                ?
+                <li>
                 <Link to='/login' className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
                   Login
+                </Link>
+              </li>
+              :
+              <li className="flex gap-5">
+
+              <li onClick={logout}>
+                <Link className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+                  Logout
                 </Link>
               </li>
               {/* <li>
@@ -49,6 +66,10 @@ const Navbar = () => {
                   User
                 </Link>
               </li> */}
+              </li>
+              }
+
+             
               <li>
                 <Link className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
                   Dark

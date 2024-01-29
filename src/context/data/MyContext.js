@@ -1,16 +1,18 @@
 import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import {ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
 const Context = createContext();
 
 const MyContext = (props) => {
+
+
   const [product, setProduct] = useState([]);
   const [count, setCount] = useState([]);
   const [error, setError] = useState(false);
-  const [msg, setMsg] = useState("");
   const [user, setUser] = useState(null);
 
 
@@ -75,28 +77,40 @@ const MyContext = (props) => {
   }, []);
 
 
+  // react toastify
+  const notify = (msg) =>{
+    console.log(msg)
+    toast(msg);
+  } 
 
-  const notify = () => toast(`${msg}`);
 
-
-
+  // save user in localhost
   const loginUser = (user) => {
     setUser(user);
-    localStorage.setItem('quiz',JSON.stringify(user))
+    localStorage.setItem('ebharat',JSON.stringify(user))
   };
 
 
-  // get Data from localstorage
+  // get user from localstorage
   useEffect(
     ()=>{
-      let lsData = localStorage.getItem('quiz');
+      let lsData = localStorage.getItem('ebharat');
       setUser(JSON.parse(lsData))
     },[]
   )
 
+  // logout function
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('ebharat')
+  }
+
   return (
-    <Context.Provider value={{ product, count, addToCart, removeFromCart, loginUser, setMsg, setError, notify,user}}>
+    <Context.Provider value={{ product, count, addToCart, removeFromCart, loginUser, setError, notify,logout,user}}>
+    
+     
       {props.children}
+    
     </Context.Provider>
   );
 };
@@ -104,3 +118,4 @@ const MyContext = (props) => {
 export default MyContext;
 
 export { Context };
+

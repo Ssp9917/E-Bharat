@@ -1,13 +1,14 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Context } from '../../context/data/MyContext';
 import { auth } from '../../firebase/firebaseConfig';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
 
-  const { loginUser, setMsg } = useContext(Context);
+  const { loginUser, notify } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -29,14 +30,14 @@ const Signup = () => {
             // ...
             console.log(user);
             loginUser(user);
-            setMsg("Account Created Successfully !");
+            notify("Account Created Successfully !");
             navigate("/");
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             // ..
-            setMsg(errorMessage);
+            notify(errorMessage);
             console.log(errorMessage)
           });
       } else {

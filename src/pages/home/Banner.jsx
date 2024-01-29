@@ -9,8 +9,10 @@ import banner2 from '../../Assets/banner2.jpg'
 import banner3 from '../../Assets/banner3.jpg'
 import banner4 from '../../Assets/banner4.jpg'
 
+
 const Banner = () => {
   return (
+   
     <Swiper
     spaceBetween={30}
     centeredSlides={true}
@@ -37,6 +39,7 @@ const Banner = () => {
     <SwiperSlide>Slide 8</SwiperSlide>
     <SwiperSlide>Slide 9</SwiperSlide> */}
   </Swiper>
+  
   )
 }
 
