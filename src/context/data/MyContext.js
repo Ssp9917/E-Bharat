@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Timestamp, addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { Timestamp, addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, setDoc } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import {ToastContainer, toast } from "react-toastify";
@@ -132,9 +132,8 @@ const MyContext = (props) => {
 
     // ********************** Add Product Section  **********************
 
-    const addProductInFireStore = async () =>{
-
-      console.log(firestoreProducts)
+    const addProductInFireStore =async  () =>{
+      // console.log(firestoreProducts)
 
       if(firestoreProducts.name != null && firestoreProducts.price != null && firestoreProducts.imageUrl != null && firestoreProducts.category != null && firestoreProducts.description != null  ){
 
@@ -143,9 +142,12 @@ const MyContext = (props) => {
 
         try {
           await addDoc(ProductRef,firestoreProducts)
+          getProductFromFireStore()
+          alert("product added successfully")
         } catch (error) {
           console.log(error)
         }
+        setFirestoreProducts("")
 
       }else{
         console.log("All Fields Are Required")
@@ -155,26 +157,32 @@ const MyContext = (props) => {
 
      // ********************** Get Product Section  **********************
 
-     const [Products,setProducts] = useState([])
+     const [products,setProducts] = useState([])
 
      const getProductFromFireStore = async () => {
+       
         try {
-
+      
           // create query
-          const q = query(collection(fireDb,'firestoreProducts'),
+          const q = query(collection(fireDb,'products'),
           orderBy('time')
           );
-
-          const data = onSnapshot(q, (QuerySnapshot)=>{
+          
+          const data = onSnapshot(q, (querySnapshot)=>{
+            console.log('hello')
             // create empty array
-            let getProducts = [];
+            let productsArray = [];
+            
+            querySnapshot.forEach((doc) => {
+              console.log(doc)
+              productsArray.push({...doc.data(),id:doc.id});
+            });
 
-            QuerySnapshot.forEach((doc)=>{
-              getProducts.push({...doc.data(),id:doc.id()})
-            })
-
-            setProducts(getProducts);
+           
+            setProducts(productsArray);
           })
+
+          // console.log(data)
 
           return () => data
           
@@ -182,6 +190,7 @@ const MyContext = (props) => {
           console.log(error)
         }
      }
+    //  console.log(products)
 
 
 
@@ -193,9 +202,42 @@ const MyContext = (props) => {
       },[]
      )
 
+     //  ********************** update Product   **********************
+
+      const editHandler = (item) =>{
+        setFirestoreProducts(item)
+      }
+
+      // update product
+
+      const updateProduct = async () => {
+        try {
+          await setDoc(doc(fireDb,'products',firestoreProducts.id),firestoreProducts);
+          alert('Product Updated successfully')
+          getProductFromFireStore()
+          
+        } catch (error) {
+          console.log(error)
+        }
+        setFirestoreProducts('')
+      }
+
+
+      
+     //  ********************** delete Product   **********************
+
+     const deleteProduct = async (item) =>{
+      try {
+        await deleteDoc(doc(fireDb,'products',item.id));
+        alert('Product deleted successfully')
+        getProductFromFireStore()
+      } catch (error) {
+        console.log(error)
+      }
+     }
 
   return (
-    <Context.Provider value={{ count, addToCart, removeFromCart, loginUser, setError, notify,logout,user, firestoreProducts,setFirestoreProducts,addProductInFireStore}}>
+    <Context.Provider value={{ count, addToCart, removeFromCart, loginUser, setError, notify,logout,user, firestoreProducts,setFirestoreProducts,addProductInFireStore,products,deleteProduct,editHandler,updateProduct}}>
     
      
       {props.children}
