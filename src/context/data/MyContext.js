@@ -11,9 +11,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { fireDb } from "../../firebase/firebaseConfig";
 
 const Context = createContext();
@@ -72,12 +70,6 @@ const MyContext = (props) => {
   //       console.log(error);
   //     });
   // }, []);
-
-  // react toastify
-  const notify = (msg) => {
-    console.log(msg);
-    toast(msg);
-  };
 
   // save user in localhost
   const loginUser = (user) => {
@@ -212,9 +204,7 @@ const MyContext = (props) => {
     }
   };
 
-
-
-  // Single Product information page 
+  // Single Product information page
 
   return (
     <Context.Provider
@@ -224,13 +214,13 @@ const MyContext = (props) => {
         removeFromCart,
         loginUser,
         setError,
-        notify,
+
         logout,
         user,
         firestoreProducts,
         setFirestoreProducts,
         addProductInFireStore,
-       products,
+        products,
         deleteProduct,
         editHandler,
         updateProduct,
