@@ -32,7 +32,7 @@ const Traking = () => {
                 track.map(
                     (d,i)=>{
                         return(
-                            <div className="w-72 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                            <div key={i} className="w-72 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                            
                             <div className="flex flex-col items-center pb-10">
                               <div

@@ -27,10 +27,10 @@ const Banner = () => {
     modules={[Autoplay, Pagination, Navigation]}
     className="h-[50vh] text-center "
   >
-    <SwiperSlide><img src={banner1} alt="" className='w-full h-full' /></SwiperSlide>
+    {/* <SwiperSlide><img src={banner1} alt="" className='w-full h-full' /></SwiperSlide> */}
     <SwiperSlide><img src={banner2} alt="" className='w-full h-full' /></SwiperSlide>
-    <SwiperSlide><img src={banner3} alt="" className='w-full h-full' /></SwiperSlide>
-    <SwiperSlide><img src={banner4} alt="" className='w-full h-full' /></SwiperSlide>
+    {/* <SwiperSlide><img src={banner3} alt="" className='w-full h-full' /></SwiperSlide> */}
+    {/* <SwiperSlide><img src={banner4} alt="" className='w-full h-full' /></SwiperSlide> */}
     {/* <SwiperSlide>Slide 3</SwiperSlide>
     <SwiperSlide>Slide 4</SwiperSlide>
     <SwiperSlide>Slide 5</SwiperSlide>

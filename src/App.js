@@ -15,6 +15,7 @@ import UpdateProduct from "./pages/admin/pages/UpdateProduct";
 import AddProduct from "./pages/admin/pages/AddProduct";
 import Login from "./pages/authentication/Login";
 import Signup from "./pages/authentication/Signup";
+import ProductInfo from "./pages/productInfo/ProductInfo";
 
 // Protected Routes For Admin
 export const ProtectedRoutesForAdmin = ({ children }) => {
@@ -87,6 +88,10 @@ const routes = createBrowserRouter([
       {
         path: "signup",
         element: <Signup />,
+      },
+      {
+        path: "productInfo/:id",
+        element: <ProductInfo />,
       },
     ],
   },

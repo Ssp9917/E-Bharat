@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { IoMdArrowDropupCircle } from "react-icons/io";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { Context } from "../../context/data/MyContext";
+import Model from "../model/Model";
+import { addDoc, collection } from "firebase/firestore";
+import { fireDb } from "../../firebase/firebaseConfig";
 
 const Cart = () => {
   // const { product, count} = useContext(FilterContext);
-  const {product,count} = useContext(Context)
+  const {products,count} = useContext(Context)
 
   
 
@@ -16,16 +19,118 @@ const Cart = () => {
   let total = 0
 
   if (count.length != 0) {
-    cartProduct = product.filter((d) => {
+    cartProduct = products.filter((d) => {
       if (count.indexOf(d.id) == -1) return false;
       else return true;
     });
   }
 
-  
+
+
+
+
+
+
+
+  // ************************************** Payment Getway Code Start ***********************************
+
+
+  const [name,setName] = useState('');
+  const [address,setAddress] = useState('');
+  const [pincode,setPincode] = useState('');
+  const [phoneNumber,setPhoneNumber] =useState('');
+
+
+  // create buynow function
+  const buyNow = () =>{
+    if(name != '' && address != '' && pincode != '' && phoneNumber != ''){
+
+      // save addressInfo in a object
+
+      const addressInfo = {
+        name,
+        address,
+        phoneNumber,
+        pincode,
+        date: new Date().toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+          }
+        )
+      }
+
+      // razor pay main function
+      var options = {
+        key: "rzp_test_WbuupPlP94gvQA",
+        key_secret: "Ub6JjLuuoQRj2Hy3pZGpIiHi",
+        amount: parseInt(500),
+        currency: "INR",
+        order_receipt: 'order_rcptid_' + name,
+        name: "E-Bharat",
+        description: "for testing purpose",
+        handler:function(response){
+          console.log(response)
+
+          alert('Paiment Successful')
+
+          const paymentId = response.rozorpay_payment_id
+
+
+          // store in firebase help of add doc method
+          const orderInfo = {
+            cartProduct,
+            addressInfo,
+            date: new Date().toLocaleString(
+              'en-US',
+              {
+                month:'short',
+                day:"2-digit",
+                year:"numeric"
+              }
+            ),
+            email:JSON.parse(localStorage.getItem('ebharat'))?.email,
+            userid:JSON.parse(localStorage.getItem('ebharat')).uid,
+            paymentId
+          }
+
+
+
+          try {
+            const result = addDoc(collection(fireDb,"orders"),orderInfo)
+            alert('order add successful')
+          } catch (error) {
+            console.log(error)
+          }
+
+        },
+
+        theme:{
+          color:"#3399cc"
+        }
+        
+      }
+
+
+      var pay = new window.Razorpay(options);
+
+      pay.open();
+      console.log(pay)
+    }else{
+      alert("All fields are required") 
+    }
+  }
+
+  // ************************************** Payment Getway Code End ***********************************
+
+ 
 
   return (
-    <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+    <>
+   
+    <div className="flex h-full flex-col overflow-y-scroll bg-white ">
       <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
         <div className="flex items-start justify-between">
           <h2
@@ -64,43 +169,16 @@ const Cart = () => {
             <ul role="list" className="-my-6 divide-y divide-gray-200">
               {cartProduct.map((d, i) => {
                total += d.price
-                return <CartItem total={total} image={d.image} title={d.title} price={d.price} id={d.id} />; 
+                return <CartItem total={total} image={d.imageUrl} title={d.title} price={d.price} id={d.id} />; 
               })}
             </ul>
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Subtotal</p>
-          <p>${Math.floor(total)}</p>
-        </div>
-        <p className="mt-0.5 text-sm text-gray-500">
-          Shipping Free <br /> Cash on delevery available.
-        </p>
-        <div className="mt-6">
-          <a
-            href="#"
-            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-          >
-            Checkout
-          </a>
-        </div>
-        <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-          <p>
-            or
-            <button
-              type="button"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              <Link to="/">Continue Shopping</Link>
-              <span aria-hidden="true"> →</span>
-            </button>
-          </p>
-        </div>
-      </div>
+      
     </div>
+    <Model  name={name} address={address} pincode={pincode} phoneNumber={phoneNumber} setName={setName} setAddress={setAddress} setPincode={setPincode} setPhoneNumber={setPhoneNumber} buyNow={buyNow}/>
+    </>
   );
 };
 

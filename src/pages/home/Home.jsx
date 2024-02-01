@@ -8,7 +8,7 @@ import Testimonial from "./Testimonial";
 
 const Home = () => {
     const context = useContext(myContext)
-    console.log(context)
+    // console.log(context)
   return (
     <>
    
