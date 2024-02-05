@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Context } from '../../context/data/MyContext';
 import { auth } from '../../firebase/firebaseConfig';
-import { toast } from 'react-toastify';
+
 
 const Signup = () => {
 
